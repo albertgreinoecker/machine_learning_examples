@@ -17,7 +17,7 @@ from PIL import Image
 num_classes = 3
 input_shape = (180, 180, 3)
 
-d = keras.preprocessing.image_dataset_from_directory('/home/albert/tmp/img', image_size=(180, 180), label_mode='categorical')
+d = keras.preprocessing.image_dataset_from_directory('/home/albert/tmp/img', image_size=(180, 180), label_mode='categorical', batch_size= 1000)
 
 images = None
 labels = None
