@@ -29,7 +29,10 @@ with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence
         if results.detections:
             for detection in results.detections:
                 mp_drawing.draw_detection(image, detection)
-
+                bboxC = detection.location_data.relative_bounding_box
+                print(f"Face Detected with Confidence {detection.score[0]:.2f}:")
+                print(
+                    f"  Bounding Box: x={bboxC.xmin:.2f}, y={bboxC.ymin:.2f}, width={bboxC.width:.2f}, height={bboxC.height:.2f}")
         # Display the resulting frame
         cv2.imshow('MediaPipe Face Detection', image)
         if cv2.waitKey(5) & 0xFF == 27:  # Press 'ESC' to exit
