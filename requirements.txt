@@ -4,3 +4,5 @@ keras
 tensorflow
 Pillow
 pandas
+transformers
+mediapipe
