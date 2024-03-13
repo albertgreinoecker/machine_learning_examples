@@ -6,3 +6,4 @@ Pillow
 pandas
 transformers
 mediapipe
+cv2
