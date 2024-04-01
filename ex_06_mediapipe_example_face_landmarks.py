@@ -32,13 +32,22 @@ with mp_face_mesh.FaceMesh(
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
-                mp_drawing.draw_landmarks(
-                    image,
-                    face_landmarks,
-                    mp_face_mesh.FACEMESH_CONTOURS,
-                    landmark_drawing_spec=None,
-                    connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_contours_style())
+                # mp_drawing.draw_landmarks(
+                #     image,
+                #     face_landmarks,
+                #     mp_face_mesh.FACEMESH_CONTOURS,
+                #     landmark_drawing_spec=None,
+                #     connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_contours_style())
 
+                for idx, landmark in enumerate(face_landmarks.landmark):
+                    # Convert normalized position to pixel position
+                    x = int(landmark.x * image.shape[1])
+                    y = int(landmark.y * image.shape[0])
+
+                    # Draw the landmark number
+                    cv2.putText(image, str(idx), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (255, 0, 0), 1)
+
+                #
                 # Example: Print the nose tip and left eye coordinates
                 # Nose tip is landmark 4, left eye outer corner is landmark 33 (using the 468 landmark model)
                 nose_tip = face_landmarks.landmark[4]
