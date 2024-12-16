@@ -11,7 +11,8 @@ from random import randint
 #Kennenlernen er Datensätze
 print ("trainingsdaten:")
 print (len(train_images))
-
+print (len(test_images))
+print(train_images.shape)
 img_no = 100
 print (train_images[img_no])
 print (train_labels[img_no])

@@ -47,6 +47,8 @@ x_train = x_train.astype("float32") / 255
 print(x_train.shape, "train samples")
 x_test = x_test.astype("float32") / 255
 
+
+
 # Make sure images have shape (28, 28, 1)
 x_train = np.expand_dims(x_train, -1)
 x_test = np.expand_dims(x_test, -1)
@@ -60,9 +62,12 @@ print(nr_labels_y, "Number of labels")
 
 # convert class vectors (the labels) to binary class matrices
 y_train = keras.utils.to_categorical(y_train, num_classes)
+
+print(y_train[10])
 y_labels = y_test #use this to leave the labels untouched
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
+print(y_train[0])
 """
 ## Build the model
 """
@@ -71,6 +76,8 @@ x_train = x_train.reshape(60000, 784)
 x_test = x_test.reshape(10000, 784)
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
+
+print(x_train[1][400:600])
 
 model = keras.Sequential(
     [
@@ -113,25 +120,28 @@ pred = model.predict(x_test)
 print(pred[1]) #Prediction for image 1
 pred_1 = np.argmax(pred[1])
 print(pred_1)
+np.argmax(y_test[1])
 
-for i in range(0,100):
+for i in range(0,1000):
     pred_i = np.argmax(pred[i]) # get the position of the highest value within the list
-    print (y_labels[i], pred_i)
+    real = np.argmax(y_test[i])
+    if  real != pred_i:
+        print(real, pred_i)
 
 
 """
 How to load and save the model
 """
 
-model.save('/home/albert/model.mdl')
-model.save_weights("/home/albert/model.h5")
+model.save('/home/albert/model.h5')
+model.save_weights("/home/albert/my.weights.h5")
 
 weights = model.get_weights()
 j =json.dumps(pd.Series(weights).to_json(orient='values'), indent=3)
 print(j)
 
-model = keras.models.load_model('/home/albert/model.mdl')
-model.load_weights("/home/albert/model.h5")
+model = keras.models.load_model('/home/albert/model.h5')
+model.load_weights("/home/albert/my.weights.h5")
 
 model_json = model.to_json()
 print (model_json)
