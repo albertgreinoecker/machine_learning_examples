@@ -133,15 +133,15 @@ for i in range(0,1000):
 How to load and save the model
 """
 
-model.save('/home/albert/model.h5')
-model.save_weights("/home/albert/my.weights.h5")
+model.save('out/ex_02_model.h5')
+model.save_weights('out/ex_02.weights.h5')
 
 weights = model.get_weights()
 j =json.dumps(pd.Series(weights).to_json(orient='values'), indent=3)
 print(j)
 
-model = keras.models.load_model('/home/albert/model.h5')
-model.load_weights("/home/albert/my.weights.h5")
+model = keras.models.load_model('out/ex_02_model.h5')
+model.load_weights('out/ex_02.weights.h5')
 
 model_json = model.to_json()
 print (model_json)
