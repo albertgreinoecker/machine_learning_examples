@@ -1,13 +1,17 @@
-import numpy as np
 import pandas as pd
 import collections #used for counting items of a list
-from tensorflow import keras
-from keras import layers
-from keras.datasets import mnist, fashion_mnist
+import os
 import matplotlib.pyplot as plt
-from tensorflow import keras
 import json
 
+from keras.src.datasets import mnist
+import keras
+import numpy as np
+from keras import layers
+
+
+
+os.environ["KERAS_BACKEND"] = "tensorflow"
 """
 ## Prepare the data
 """
@@ -133,14 +137,13 @@ for i in range(0,1000):
 How to load and save the model
 """
 
-model.save('out/ex_02_model.h5')
+model.save('out/ex_02_model.keras')
 model.save_weights('out/ex_02.weights.h5')
 
 weights = model.get_weights()
 j =json.dumps(pd.Series(weights).to_json(orient='values'), indent=3)
-print(j)
 
-model = keras.models.load_model('out/ex_02_model.h5')
+model = keras.models.load_model('out/ex_02_model.keras')
 model.load_weights('out/ex_02.weights.h5')
 
 model_json = model.to_json()
