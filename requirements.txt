@@ -6,4 +6,8 @@ Pillow
 pandas
 transformers
 mediapipe
-cv2
+opencv-python
+gymnasium
+nltk
+gensim
+tensorboard
