@@ -11,3 +11,12 @@ gymnasium
 nltk
 gensim
 tensorboard
+tiktoken
+spacy
+minisom
+IPython
+flair
+chromadb
+ultralytics
+deepface
+tf-keras #needed by deepface
