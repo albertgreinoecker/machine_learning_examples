@@ -50,10 +50,10 @@ with mp_face_mesh.FaceMesh(
                 #
                 # Example: Print the nose tip and left eye coordinates
                 # Nose tip is landmark 4, left eye outer corner is landmark 33 (using the 468 landmark model)
-                nose_tip = face_landmarks.landmark[4]
-                left_eye_outer = face_landmarks.landmark[33]
-                print(f"Nose Tip: x={nose_tip.x:.2f}, y={nose_tip.y:.2f}, z={nose_tip.z:.2f}")
-                print(f"Left Eye Outer: x={left_eye_outer.x:.2f}, y={left_eye_outer.y:.2f}, z={left_eye_outer.z:.2f}")
+                #nose_tip = face_landmarks.landmark[4]
+                #left_eye_outer = face_landmarks.landmark[33]
+                #print(f"Nose Tip: x={nose_tip.x:.2f}, y={nose_tip.y:.2f}, z={nose_tip.z:.2f}")
+                #print(f"Left Eye Outer: x={left_eye_outer.x:.2f}, y={left_eye_outer.y:.2f}, z={left_eye_outer.z:.2f}")
 
         # Display the resulting frame
         cv2.imshow('MediaPipe Face Mesh', image)

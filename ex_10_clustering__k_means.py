@@ -49,6 +49,7 @@ clf = KMeans(n_clusters=3)
 zipped = list(zip(iris.data, iris.target))
 random.shuffle(zipped)
 X,y = zip(*zipped)
+
 clf.fit(X[:100]) #unsupervised, lerne ohne Labels mit den ersten 100 Datensaetzen
 print(X)
 X = np.array(list(np.vstack(X))) #Mache eine Matrix draus
