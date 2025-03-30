@@ -20,3 +20,11 @@ chromadb
 ultralytics
 deepface
 tf-keras #needed by deepface
+sentence_transformers
+pdf2image
+pytesseract
+diffusers
+torchaudio
+audiocraft
+ollama
+librosa
