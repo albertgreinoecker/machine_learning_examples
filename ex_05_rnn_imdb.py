@@ -82,17 +82,15 @@ print(f"\nTestgenauigkeit: {acc:.2f}")
 # --- 6. Vorhersagen machen ---
 
 def encode_review(text):
-    # Kleinbuchstaben + Wörter trennen
     words = text.lower().split()
-    encoded = [1]  # <START> Symbol
-
+    encoded = [1]  # <START>
     for w in words:
-        if w in word_index:
-            encoded.append(word_index[w])
+        idx = word_index.get(w)
+        if idx is not None and idx < max_features:
+            encoded.append(idx + 3)  # Korrekte Verschiebung wegen der resvervierten Indizes
         else:
-            encoded.append(2)  # <UNK> für unbekanntes Wort
+            encoded.append(2)  # <UNK>
     return encoded
-
 
 
 model.save("models/ex_5_imdb.model.h5")  # oder "sentiment_model.keras"
@@ -102,7 +100,7 @@ from tensorflow.keras.models import load_model
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
 
-model = load_model("models/ex_5_imdb.model.h5")
+#model = load_model("models/ex_5_imdb.model.h5")
 
 my_review = (
     "I really loved this movie. The story was engaging and the characters felt real. "
@@ -110,8 +108,9 @@ my_review = (
     "The pacing kept me interested from start to finish and the ending was beautiful. "
     "Definitely one of the best films I’ve seen this year."
 )
-encoded_review = encode_review(my_review[:maxlen])
-print(encoded_review)
+encoded_review = encode_review(my_review)
+padded = sequence.pad_sequences([encoded_review], maxlen=maxlen)
+pred = model.predict(padded)
 
 pred = model.predict(sequence.pad_sequences([encoded_review], maxlen=maxlen))
 print(pred)
@@ -126,9 +125,9 @@ my_review = (
     "There wasn’t a single moment that felt genuine or engaging. "
     "Avoid this movie if you value your time."
 )
-encoded_review = encode_review(my_review[:maxlen])
+encoded_review = encode_review(my_review)
 padded = sequence.pad_sequences([encoded_review], maxlen=maxlen)
-print(encoded_review[:maxlen])
+pred = model.predict(padded)
 
 pred = model.predict(padded)
 print(pred)
