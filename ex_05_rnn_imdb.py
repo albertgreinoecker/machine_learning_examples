@@ -7,33 +7,40 @@ import os
 import  tensorflow as tf
 tf.config.optimizer.set_jit(False)
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
+#os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
 
 # --- 1. IMDB-Daten laden ---
 # Wir nehmen die 10.000 häufigsten Wörter
 max_features = 10000
-maxlen = 200           # Wir betrachten nur die ersten 200 Wörter pro Review
+
+# Wir betrachten nur die ersten 200 Wörter pro Review
+#beim Training eines RNN müssen alle Eingabesequenzen gleich lang sein
+maxlen = 200
 
 print("Lade Daten ...")
 (X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=max_features)
 
 # --- Wortindex laden ---
+# hat die Form: wort -> index (z.B.: bratwurst 51998
 word_index = imdb.get_word_index()
 
-X_train[0]
 
-# Das Mapping invertieren: index → wort
+for key, value in word_index.items():
+    print(key, value)
+
+#Möchte man die speziellen Tokens sehen und nicht nur die Indizes,
+# dann muss man das Mapping invertieren: index → wort
 reverse_word_index = {value + 3: key for key, value in word_index.items()}
 reverse_word_index[0] = "<PAD>"
 reverse_word_index[1] = "<START>"
 reverse_word_index[2] = "<UNK>"   # unbekanntes Wort
 reverse_word_index[3] = "<UNUSED>"
 
-# Beispiel: ersten Review wieder in Text zurückwandeln
+# Dann kann man die Reviews wieder in Text zurückwandeln
 decoded_review = ' '.join([reverse_word_index.get(i, '?') for i in X_train[0]])
 print("Beispiel-Review (entschlüsselt):", decoded_review)
 
-#0 negativ, 1 positiv
+#Alle Zahlen zwischen den beiden Polen: 0 negativ, 1 positiv
 print(y_train[0])
 
 print(len(X_train), "Trainingsbeispiele")
@@ -53,12 +60,16 @@ X_test = sequence.pad_sequences(X_test, maxlen=maxlen)
 # SimpleRNN(32),                         # verarbeitet Sequenz weiter
 
 model = Sequential([
-    Embedding(max_features, 32, input_length=maxlen),  # Wandelt Wortindizes in Vektoren
+    # Wandelt Wortindizes in Vektoren, Embeddings nicht aus einer externen Quelle bezogen,
+    # sondern vom Modell selbst während des Trainings gelernt.
+    Embedding(max_features, output_dim=32, input_length=maxlen),
     #SimpleRNN(32),                                     # Einfaches RNN mit 32 Einheiten (Neuronen). Jede Zelle hat ihr eigenes Gedächtnis.
     LSTM(64),
-    # GRU(64),                                       # GRU-Schicht mit 64 Einheiten
+    # GRU(64),                                          # GRU-Schicht mit 64 Einheiten
     Dense(1, activation='sigmoid')                     # Binäre Sentiment-Ausgabe (positiv/negativ)
 ])
+
+#Der Rest ist wie gehabt:
 
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
@@ -96,9 +107,6 @@ def encode_review(text):
 model.save("models/ex_5_imdb.model.h5")  # oder "sentiment_model.keras"
 
 ######################################################
-from tensorflow.keras.models import load_model
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
 
 #model = load_model("models/ex_5_imdb.model.h5")
 
