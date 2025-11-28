@@ -65,7 +65,7 @@ nlp = spacy.load("de_core_news_lg")
 import spacy
 import numpy as np
 
-nlp = spacy.load("de_core_news_md")
+#nlp = spacy.load("de_core_news_md")
 
 def find_synonyms(word, top_n=5):
     token = nlp(word)
