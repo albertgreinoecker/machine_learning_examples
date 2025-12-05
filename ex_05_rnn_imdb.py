@@ -24,6 +24,7 @@ print("Lade Daten ...")
 # hat die Form: wort -> index (z.B.: bratwurst 51998
 word_index = imdb.get_word_index()
 
+X_train[0]
 
 for key, value in word_index.items():
     print(key, value)
@@ -120,9 +121,6 @@ encoded_review = encode_review(my_review)
 padded = sequence.pad_sequences([encoded_review], maxlen=maxlen)
 pred = model.predict(padded)
 
-pred = model.predict(sequence.pad_sequences([encoded_review], maxlen=maxlen))
-print(pred)
-
 
 my_review = (
     "Honestly, this was one of the worst movies I have ever seen. "
@@ -135,8 +133,6 @@ my_review = (
 )
 encoded_review = encode_review(my_review)
 padded = sequence.pad_sequences([encoded_review], maxlen=maxlen)
-pred = model.predict(padded)
-
 pred = model.predict(padded)
 print(pred)
 
