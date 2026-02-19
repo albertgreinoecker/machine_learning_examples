@@ -1,47 +1,54 @@
+import base64
 import os
-import openai
 import json
-import keys as k
-openai.organization = "org-gsiX34pWAdwNfeWAkY6Rejg0"
-openai.api_key = k.openai_key # os.getenv("OPENAI_API_KEY")
-# engines = openai.Engine.list()
-# for e in engines.data:
-#     print(e.id)
+from dotenv import load_dotenv
+from openai import OpenAI
 
+# .env laden
+load_dotenv()
 
-# completion = openai.Completion.create(engine="ada", prompt="italian recipe")
-#
-# print("the completion:")
-# print(completion.choices[0].text)
+# Client initialisieren
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
-# response = openai.Completion.create(
-#   model="code-davinci-002",
-#   prompt="write the first 10 numbers in Java",
-#   temperature=0,
-#   max_tokens=256,
-#   top_p=1,
-#   frequency_penalty=0,
-#   presence_penalty=0
-# )
-# print()
-# print(response.choices[0].text)
-
-response = openai.Completion.create(
-  model="text-davinci-003",
-  prompt="alle österreichischen Bundesländer als JSON", #
-  temperature=0,
-  max_tokens=256,
-  top_p=1,
-  frequency_penalty=0,
-  presence_penalty=0
+# Anfrage an das neue Responses-API
+response = client.responses.create(
+    model="gpt-4.1-mini",
+    input="Gib alle österreichischen Bundesländer als JSON-Liste aus. "
+          "Jedes Objekt soll die Felder 'name' und 'capital' enthalten. "
+          "Antworte ausschließlich mit gültigem JSON dass man gleich weiterverarbeiten kann, nicht für die Darstellung, also kein Markdown."
 )
-print(response.choices[0].text)
-j_str = response.choices[0].text
-j = json.loads(j_str)
 
-for b in j:
-    print("%s: %s" % (b["name"], b["capital"]))
+# Text extrahieren
+j_str = response.output_text
+print("RAW RESPONSE:")
+print(j_str)
+
+# JSON parsen
+bundeslaender = json.loads(j_str)
+
+print("\nBundesländer:")
+for b in bundeslaender:
+    print(f"{b['name']}: {b['capital']}")
 
 
+########################################
+# Bildgenerierung mit DALL·E 3
 
+
+prompt = "Zeige mir ein Bild von einem Programmierer der zanz im Stil von Don Martin"
+
+result = client.images.generate(
+    model="gpt-image-1",
+    prompt=prompt,
+    size="1024x1024"
+)
+
+# Base64 dekodieren
+image_base64 = result.data[0].b64_json
+image_bytes = base64.b64decode(image_base64)
+
+# Datei speichern
+with open("generated_image.png", "wb") as f:
+    f.write(image_bytes)
+
+print("Bild gespeichert als generated_image.png")
