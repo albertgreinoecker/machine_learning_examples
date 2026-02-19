@@ -35,7 +35,7 @@ for b in bundeslaender:
 # Bildgenerierung mit DALL·E 3
 
 
-prompt = "Zeige mir ein Bild von einem Programmierer der zanz im Stil von Don Martin"
+prompt = "Zeige mir ein Bild von einem Programmierer  im Stil von Don Martin"
 
 result = client.images.generate(
     model="gpt-image-1",
@@ -48,7 +48,39 @@ image_base64 = result.data[0].b64_json
 image_bytes = base64.b64decode(image_base64)
 
 # Datei speichern
-with open("generated_image.png", "wb") as f:
+with open("out/generated_image.png", "wb") as f:
     f.write(image_bytes)
 
 print("Bild gespeichert als generated_image.png")
+
+#################################################
+# Code generieren mit Codex
+
+# Prompt für Code-Generierung
+prompt = """
+Schreibe sauberen, kommentierten Python-Code,
+der die ersten 10 Fibonacci-Zahlen berechnet und ausgibt.
+Antworte ausschließlich mit Code, nicht für die Darstellung, also kein Markdown..
+"""
+
+# Anfrage
+response = client.responses.create(
+    model="gpt-4.1-mini",
+    input=[
+        {
+            "role": "system",
+            "content": "Du bist ein professioneller Softwareentwickler."
+        },
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+)
+
+# Generierten Code ausgeben
+generated_code = response.output_text
+print("GENERIERTER CODE:\n")
+print(generated_code)
+
+exec(generated_code)
