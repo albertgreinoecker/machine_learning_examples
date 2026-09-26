@@ -6,21 +6,22 @@ from sklearn.decomposition import PCA
 model = api.load("glove-wiki-gigaword-100") #128 MB
 
 words = list(model.key_to_index.keys())
-words[:200]
-
+words[2001]
+print(len(words))
 model.get_vector("computer")
 
 # Ähnlichste Wörter zu "king"
 print(model.most_similar("king"))
 print(model.most_similar("doctor"))
 print(model.most_similar("university"))
+print(model.most_similar("computer"))
 
 # Vektoroperation: king - man + woman = queen
 result = model.most_similar(positive=['king', 'woman'], negative=['man'])
 print(result)
 
 # Wortähnlichketien berechnen
-print(model.similarity("king", "queen"))
+print(model.similarity("king", "bus"))
 print(model.similarity("car", "bus"))
 print(model.similarity("dog", "cat"))
 print(model.similarity("car", "saxophone"))

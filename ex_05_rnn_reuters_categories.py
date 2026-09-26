@@ -17,4 +17,31 @@ label_names = [
     "wpi", "strategic-reserves", "wheat-germ"
 ]
 
-print(f"Beispielklasse: {y_train[0]} {label_names[y_train[0]]}")
+label_names_de = [
+    "Kakao", "Getreide", "Pflanzenöl", "Gewinn", "Übernahme", "Weizen", "Mais", "Rohöl",
+    "Devisen", "Zinsen", "Schifffahrt", "Handel", "Währungsreserven", "Baumwolle", "Kaffee",
+    "Zucker", "Gold", "Zinn", "strategisches Metall", "Viehbestand", "Einzelhandel", "Industrieproduktion",
+    "Eisen und Stahl", "Kautschuk", "Heizung", "Arbeitsplätze", "Frühindikator (LEI)", "Leistungsbilanz", "Schlachtkörper",
+    "Geldmenge", "Aluminium", "Ölsaaten", "Futtermittel", "Verbraucherpreisindex (VPI)", "Wohnungsbau",
+    "Kautschuk", "Zink", "Nickel", "Orange", "Petrochemie", "US-Dollar", "Gas", "Silber",
+    "Großhandelspreisindex (GPI)", "strategische Reserven", "Weizenkeim"
+]
+
+print(f"Beispielklasse: {y_train[0]} {label_names_de[y_train[0]]}")
+
+
+
+import kagglehub
+
+# Download latest version
+path = kagglehub.dataset_download("sunilthite/text-document-classification-dataset")
+
+print("Path to dataset files:", path)
+
+
+path = kagglehub.dataset_download("saurabhshahane/ecommerce-text-classification")
+print("Path to dataset files:", path)
+
+path = kagglehub.dataset_download("kelixirr/arxiv-multi-label-text-classification-datasets")
+
+print("Path to dataset files:", path)

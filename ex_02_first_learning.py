@@ -8,8 +8,10 @@ from keras.src.datasets import mnist
 import keras
 import numpy as np
 from keras import layers
+import tensorflow as tf
 
-
+print(tf.__version__)
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
 
 os.environ["KERAS_BACKEND"] = "tensorflow"
 """
@@ -64,14 +66,17 @@ print(x_test.shape[0], "number of test samples")
 nr_labels_y = collections.Counter(y_train) #count the number of labels
 print(nr_labels_y, "Number of labels")
 
+
+print(y_train[10])
+
 # convert class vectors (the labels) to binary class matrices
 y_train = keras.utils.to_categorical(y_train, num_classes)
-
+print(y_train[0])
 print(y_train[10])
 y_labels = y_test #use this to leave the labels untouched
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
-print(y_train[0])
+
 """
 ## Build the model
 """
@@ -121,6 +126,7 @@ print("Test accuracy:", score[1])
 
 pred = model.predict(x_test)
 
+pred1=pred[1]
 print(pred[1]) #Prediction for image 1
 pred_1 = np.argmax(pred[1])
 print(pred_1)

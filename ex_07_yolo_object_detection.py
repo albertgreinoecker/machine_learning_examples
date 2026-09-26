@@ -1,5 +1,14 @@
 import cv2
+import torch
 from ultralytics import YOLO
+
+# Use the GPU only if PyTorch can actually run on it (very old GPUs are no longer supported)
+try:
+    torch.zeros(1, device="cuda") + 1
+    device = "cuda"
+except Exception:
+    device = "cpu"
+print("Using device:", device)
 
 # YOLOv8 Modell laden (vortrainiertes Modell yolov8n.pt nutzen)
 model = YOLO("yolov8n.pt")
@@ -13,7 +22,7 @@ while cap.isOpened():
         break
 
     # Objekterkennung mit YOLO
-    results = model(frame)
+    results = model(frame, device=device)
 
     # Ergebnisse auf das Frame zeichnen
     for result in results:

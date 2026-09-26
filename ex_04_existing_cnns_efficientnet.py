@@ -1,12 +1,14 @@
+import tensorflow as tf
 from keras.applications import ResNet50, ResNet152
 
 from keras.preprocessing import image
 from keras.applications.resnet50 import preprocess_input, decode_predictions
+from keras.applications.efficientnet import preprocess_input, decode_predictions
+from keras.applications import EfficientNetB0
 import numpy as np
 import os
 from keras.applications.resnet50 import decode_predictions
 import json, urllib
-
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
 
@@ -20,11 +22,9 @@ for k in range(1000):
     print(k, class_index[str(k)])
 
 
-# ResNet50 laden, vortrainiert auf ImageNet
-model = ResNet152(weights="imagenet")
-
-# Modellstruktur anzeigen
+model = EfficientNetB0(weights='imagenet')
 model.summary()
+
 
 # Bild laden
 img_path = "data/cat.png"
@@ -33,6 +33,12 @@ x = image.img_to_array(img)
 x = np.expand_dims(x, axis=0)
 x = preprocess_input(x)
 
-# Vorhersage
+
+
+
+# Verwende das gleiche Bild wie oben
+# 3. Vorhersage
 preds = model.predict(x)
-print("Top-5:", decode_predictions(preds, top=5)[0])
+print("Top-5 Predictions:")
+print(decode_predictions(preds, top=5)[0])
+

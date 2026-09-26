@@ -35,7 +35,7 @@ for b in bundeslaender:
 # Bildgenerierung mit DALL·E 3
 
 
-prompt = "Zeige mir ein Bild von einem Programmierer  im Stil von Don Martin"
+prompt = "Zeige mir ein Bild von einem Programmierer  im Stil von Leonardo da Vinci, der an einem Computer arbeitet, umgeben von alten Büchern und Papieren, mit einem Hauch von Renaissance-Ästhetik."
 
 result = client.images.generate(
     model="gpt-image-1",
@@ -48,7 +48,7 @@ image_base64 = result.data[0].b64_json
 image_bytes = base64.b64decode(image_base64)
 
 # Datei speichern
-with open("out/generated_image.png", "wb") as f:
+with open("out/generated_image2.png", "wb") as f:
     f.write(image_bytes)
 
 print("Bild gespeichert als generated_image.png")
@@ -60,7 +60,7 @@ print("Bild gespeichert als generated_image.png")
 prompt = """
 Schreibe sauberen, kommentierten Python-Code,
 der die ersten 10 Fibonacci-Zahlen berechnet und ausgibt.
-Antworte ausschließlich mit Code, nicht für die Darstellung, also kein Markdown..
+Antworte ausschließlich mit Code, nicht für die Darstellung, also kein Markdown.
 """
 
 # Anfrage

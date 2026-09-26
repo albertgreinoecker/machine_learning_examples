@@ -7,6 +7,7 @@ SAMPLE_RATE = 44100
 DURATION = 1  # Sekunden
 MODEL_PATH = "models/soundclassifier_with_metadata.tflite"
 LABELS_PATH = "models/labels_soundclassifier.txt"
+
 def record_audio(duration=DURATION, sample_rate=SAMPLE_RATE):
     print("Aufnahme läuft...")
     audio = sd.rec(int(duration * sample_rate), samplerate=sample_rate, channels=1, dtype='float32')

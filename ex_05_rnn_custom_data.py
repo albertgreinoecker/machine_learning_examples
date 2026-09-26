@@ -23,7 +23,7 @@ print(sequences)
 X = pad_sequences(sequences, maxlen=10, padding='post')
 print(X)
 
-# So könnte man den Tokenizer speichern (im Bnärformat) und später wieder laden:
+# So könnte man den Tokenizer speichern (im Binärformat) und später wieder laden:
 import pickle
 with open("data/rnn_tokenizer.pkl", "wb") as f:
     pickle.dump(tokenizer, f)

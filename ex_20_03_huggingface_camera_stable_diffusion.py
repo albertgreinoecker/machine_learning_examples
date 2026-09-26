@@ -8,8 +8,16 @@ from PIL import Image
 MODEL_NAME = "runwayml/stable-diffusion-v1-5"
 
 # Stable Diffusion Pipeline laden
-device = "cuda" if torch.cuda.is_available() else "cpu"
-pipe = StableDiffusionImg2ImgPipeline.from_pretrained(MODEL_NAME, torch_dtype=torch.float16).to(device)
+# Use the GPU only if PyTorch can actually run on it (very old GPUs are no longer supported)
+try:
+    torch.zeros(1, device="cuda") + 1
+    device = "cuda"
+except Exception:
+    device = "cpu"
+print("Using device:", device)
+# float16 is only fast on the GPU, the CPU needs float32
+dtype = torch.float16 if device == "cuda" else torch.float32
+pipe = StableDiffusionImg2ImgPipeline.from_pretrained(MODEL_NAME, torch_dtype=dtype).to(device)
 
 # Kamera-Feed starten
 cap = cv2.VideoCapture(0)
