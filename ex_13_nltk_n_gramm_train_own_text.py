@@ -1,9 +1,10 @@
+from collections import Counter, defaultdict
+from pathlib import Path
+
 import nltk
 from nltk import word_tokenize
 from nltk.util import bigrams
-from collections import defaultdict, Counter
-from pathlib import Path
-from collections import defaultdict
+
 
 def train_bigram_model(text):
     """
@@ -32,14 +33,12 @@ def train_bigram_model(text):
     return bigram_probs
 
 
-
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     nltk.download("punkt_tab")
 
     # Beispiel-Text
-    #text = """Die Katze schläft. Die Katze frisst. Die Katze läuft."""
-    #text = """Die Katze frisst die Maus. Die Maus frisst den Käse. Die Katze frisst den Käse."""
+    # text = """Die Katze schläft. Die Katze frisst. Die Katze läuft."""
+    # text = """Die Katze frisst die Maus. Die Maus frisst den Käse. Die Katze frisst den Käse."""
     text = Path("data/die_verwandlung_de.txt").read_text()
     # Modell trainieren
     bigram_probabilities = train_bigram_model(text)
@@ -61,6 +60,6 @@ if __name__ == '__main__':
     for f in sorted_foll:
         print(f"  {f[0]}: {f[1]:.3f}")
 
-    print("BETT", word_followers['Bett'])
-    print("Musik", word_followers['Musik'])
-    print("Tür", word_followers['Tür'])
+    print("BETT", word_followers["Bett"])
+    print("Musik", word_followers["Musik"])
+    print("Tür", word_followers["Tür"])

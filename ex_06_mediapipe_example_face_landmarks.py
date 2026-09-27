@@ -21,7 +21,8 @@ options = vision.FaceLandmarkerOptions(
     running_mode=vision.RunningMode.VIDEO,
     num_faces=1,
     min_face_detection_confidence=0.5,
-    min_tracking_confidence=0.5)
+    min_tracking_confidence=0.5,
+)
 
 # Initialize webcam
 cap = cv2.VideoCapture(0)
@@ -60,13 +61,13 @@ with vision.FaceLandmarker.create_from_options(options) as face_mesh:
             #
             # Example: Print the nose tip and left eye coordinates
             # Nose tip is landmark 4, left eye outer corner is landmark 33 (478 landmark model incl. iris)
-            #nose_tip = face_landmarks[4]
-            #left_eye_outer = face_landmarks[33]
-            #print(f"Nose Tip: x={nose_tip.x:.2f}, y={nose_tip.y:.2f}, z={nose_tip.z:.2f}")
-            #print(f"Left Eye Outer: x={left_eye_outer.x:.2f}, y={left_eye_outer.y:.2f}, z={left_eye_outer.z:.2f}")
+            # nose_tip = face_landmarks[4]
+            # left_eye_outer = face_landmarks[33]
+            # print(f"Nose Tip: x={nose_tip.x:.2f}, y={nose_tip.y:.2f}, z={nose_tip.z:.2f}")
+            # print(f"Left Eye Outer: x={left_eye_outer.x:.2f}, y={left_eye_outer.y:.2f}, z={left_eye_outer.z:.2f}")
 
         # Display the resulting frame
-        cv2.imshow('MediaPipe Face Mesh', image)
+        cv2.imshow("MediaPipe Face Mesh", image)
         if cv2.waitKey(5) & 0xFF == 27:  # Press 'ESC' to exit
             break
 

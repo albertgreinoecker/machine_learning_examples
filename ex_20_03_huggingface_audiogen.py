@@ -1,6 +1,5 @@
-import torch
-from audiocraft.models import MusicGen
 from audiocraft.data.audio import audio_write
+from audiocraft.models import MusicGen
 
 # Lade das Modell (z. B. 'facebook/musicgen-small')
 model = MusicGen.get_pretrained("facebook/musicgen-small")

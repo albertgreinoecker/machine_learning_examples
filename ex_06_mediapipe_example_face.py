@@ -18,7 +18,8 @@ mp_drawing = vision.drawing_utils
 options = vision.FaceDetectorOptions(
     base_options=mp.tasks.BaseOptions(model_asset_path=MODEL_PATH),
     running_mode=vision.RunningMode.VIDEO,
-    min_detection_confidence=0.5)
+    min_detection_confidence=0.5,
+)
 
 # Initialize webcam
 cap = cv2.VideoCapture(0)
@@ -43,9 +44,10 @@ with vision.FaceDetector.create_from_options(options) as face_detection:
             bbox = detection.bounding_box
             print(f"Face Detected with Confidence {detection.categories[0].score:.2f}:")
             print(
-                f"  Bounding Box (pixels): x={bbox.origin_x}, y={bbox.origin_y}, width={bbox.width}, height={bbox.height}")
+                f"  Bounding Box (pixels): x={bbox.origin_x}, y={bbox.origin_y}, width={bbox.width}, height={bbox.height}"
+            )
         # Display the resulting frame
-        cv2.imshow('MediaPipe Face Detection', image)
+        cv2.imshow("MediaPipe Face Detection", image)
         if cv2.waitKey(5) & 0xFF == 27:  # Press 'ESC' to exit
             break
 

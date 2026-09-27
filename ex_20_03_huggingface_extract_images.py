@@ -1,17 +1,19 @@
-import torch
-from transformers import LayoutLMv3Processor, LayoutLMv3ForTokenClassification
-from pdf2image import convert_from_path
-from PIL import Image, ImageDraw
 import os
+
+import torch
+from pdf2image import convert_from_path
+from transformers import LayoutLMv3ForTokenClassification, LayoutLMv3Processor
 
 # Modell & Prozessor laden
 model_name = "microsoft/layoutlmv3-base"
 processor = LayoutLMv3Processor.from_pretrained(model_name, apply_ocr=True)
 model = LayoutLMv3ForTokenClassification.from_pretrained(model_name)
 
+
 def pdf_to_images(pdf_path):
     """Konvertiert PDF in Bilder (eine Seite pro Bild)"""
     return convert_from_path(pdf_path)
+
 
 def detect_figures(image):
     """Nutzt LayoutLMv3 zur Layout-Analyse"""
@@ -39,6 +41,7 @@ def detect_figures(image):
 
     return figures
 
+
 def extract_figures(image, figures, save_dir="extracted_figures/"):
     """Speichert erkannte Abbildungen aus dem Dokument"""
     os.makedirs(save_dir, exist_ok=True)
@@ -47,6 +50,7 @@ def extract_figures(image, figures, save_dir="extracted_figures/"):
         x1, y1, x2, y2 = bbox
         cropped_image = image.crop((x1, y1, x2, y2))
         cropped_image.save(f"{save_dir}figure_{i}.jpg")
+
 
 if __name__ == "__main__":
     pdf_path = "/home/albert/tmp/bierstindl.pdf"  # Dein gescanntes PDF

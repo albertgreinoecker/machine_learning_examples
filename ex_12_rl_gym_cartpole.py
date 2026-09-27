@@ -1,9 +1,10 @@
-import gymnasium as gym
-import numpy as np
 import random
 from collections import deque
-from tensorflow.keras.models import Sequential
+
+import gymnasium as gym
+import numpy as np
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
 # Modified hyperparameters
@@ -19,12 +20,13 @@ ACTION_SIZE = 2
 DISCOUNT_FACTOR = 0.99
 LEARNING_RATE = 0.001
 BATCH_SIZE = 64
-MEMORY_SIZE = 5000         # Larger replay buffer
-EPSILON_DECAY = 0.99       # Slower decay to explore longer
+MEMORY_SIZE = 5000  # Larger replay buffer
+EPSILON_DECAY = 0.99  # Slower decay to explore longer
 EPSILON_MIN = 0.01
 
 # Lower negative reward if done or truncated; from -10 to -1
 FAILURE_PENALTY = -1
+
 
 class DQNAgent:
     def __init__(self, state_size, action_size):
@@ -89,6 +91,7 @@ class DQNAgent:
         if self.epsilon > EPSILON_MIN:
             self.epsilon *= EPSILON_DECAY
 
+
 def train_dqn():
     agent = DQNAgent(STATE_SIZE, ACTION_SIZE)
 
@@ -120,12 +123,13 @@ def train_dqn():
             total_reward += reward
 
         print(
-            f"Episode: {episode+1}/{EPISODES}, "
+            f"Episode: {episode + 1}/{EPISODES}, "
             f"Score: {int(total_reward)}, "
             f"Epsilon: {agent.epsilon:.2f}"
         )
 
     env.close()
+
 
 if __name__ == "__main__":
     train_dqn()

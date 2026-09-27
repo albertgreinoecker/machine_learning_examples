@@ -1,10 +1,11 @@
 import os
+import time
 import urllib.request
+
 import cv2
 import mediapipe as mp
-import pygame
 import numpy as np
-import time
+import pygame
 
 # Download the hand landmark model once (if not present yet)
 MODEL_PATH = "models/hand_landmarker.task"
@@ -17,12 +18,15 @@ vision = mp.tasks.vision
 mp_drawing = vision.drawing_utils
 mp_drawing_styles = vision.drawing_styles
 HAND_CONNECTIONS = vision.HandLandmarksConnections.HAND_CONNECTIONS
-hands = vision.HandLandmarker.create_from_options(vision.HandLandmarkerOptions(
-    base_options=mp.tasks.BaseOptions(model_asset_path=MODEL_PATH),
-    running_mode=vision.RunningMode.VIDEO,
-    num_hands=2,
-    min_hand_detection_confidence=0.5,
-    min_tracking_confidence=0.5))
+hands = vision.HandLandmarker.create_from_options(
+    vision.HandLandmarkerOptions(
+        base_options=mp.tasks.BaseOptions(model_asset_path=MODEL_PATH),
+        running_mode=vision.RunningMode.VIDEO,
+        num_hands=2,
+        min_hand_detection_confidence=0.5,
+        min_tracking_confidence=0.5,
+    )
+)
 
 pygame.init()
 pygame.mixer.init()
@@ -37,7 +41,7 @@ SOUNDS = {
     "e": pygame.mixer.Sound("e.wav"),
     "d": pygame.mixer.Sound("d.wav"),
     "cis": pygame.mixer.Sound("cis.wav"),
-    "c": pygame.mixer.Sound("c.wav")
+    "c": pygame.mixer.Sound("c.wav"),
 }
 
 NOTE_COLORS = {
@@ -50,38 +54,42 @@ NOTE_COLORS = {
     "e": (255, 165, 0),
     "d": (128, 0, 128),
     "cis": (255, 20, 147),
-    "c": (75, 0, 130)
+    "c": (75, 0, 130),
 }
 
 effects = []
 active_notes = set()
 
+
 def spiele_note(note, position, frame_shape):
     if note in SOUNDS:
         SOUNDS[note].play()
-        effects.append({
-            'position': position,
-            'color': NOTE_COLORS[note],
-            'start_time': time.time(),
-            'duration': 1.0,
-            'frame_shape': frame_shape
-        })
+        effects.append(
+            {
+                "position": position,
+                "color": NOTE_COLORS[note],
+                "start_time": time.time(),
+                "duration": 1.0,
+                "frame_shape": frame_shape,
+            }
+        )
         active_notes.add(note)
+
 
 def draw_effects(frame):
     current_time = time.time()
     to_remove = []
 
     for i, effect in enumerate(effects):
-        elapsed = current_time - effect['start_time']
-        if elapsed > effect['duration']:
+        elapsed = current_time - effect["start_time"]
+        if elapsed > effect["duration"]:
             to_remove.append(i)
             continue
 
-        cx, cy = effect['position']
-        color = effect['color']
+        cx, cy = effect["position"]
+        color = effect["color"]
         radius = int(50 + 50 * elapsed)
-        alpha = 1.0 - (elapsed / effect['duration'])
+        alpha = 1.0 - (elapsed / effect["duration"])
 
         overlay = frame.copy()
         cv2.circle(overlay, (cx, cy), radius, color, -1)
@@ -96,10 +104,11 @@ def draw_effects(frame):
         if i < len(effects):
             note_effect = effects.pop(i)
             for note, color in NOTE_COLORS.items():
-                if color == note_effect['color']:
+                if color == note_effect["color"]:
                     if note in active_notes:
                         active_notes.remove(note)
                     break
+
 
 def draw_piano_keys(frame):
     height, width, _ = frame.shape
@@ -160,6 +169,7 @@ def draw_piano_keys(frame):
         finger_label = f"{hand_label}-{finger_info}"
         cv2.putText(frame, finger_label, (x + 10, y + 20), font, 0.4, text_color, 1)
 
+
 last_finger_positions = {}
 played_notes = {"Left": set(), "Right": set()}
 THRESHOLD = 0.08
@@ -185,13 +195,10 @@ while cap.isOpened():
 
     if result.hand_landmarks:
         for hand_idx, (hand_landmarks, handedness) in enumerate(
-                zip(result.hand_landmarks, result.handedness)):
+            zip(result.hand_landmarks, result.handedness)
+        ):
             mp_drawing.draw_landmarks(
-                frame,
-                hand_landmarks,
-                HAND_CONNECTIONS,
-                custom_style,
-                custom_connections_style
+                frame, hand_landmarks, HAND_CONNECTIONS, custom_style, custom_connections_style
             )
 
             hand_points = []
@@ -206,8 +213,9 @@ while cap.isOpened():
 
             hand_label = handedness[0].category_name
             finger_tips = [4, 8, 12, 16, 20]
-            current_finger_positions = {i: (hand_landmarks[i].x, hand_landmarks[i].y) for i in
-                                        finger_tips}
+            current_finger_positions = {
+                i: (hand_landmarks[i].x, hand_landmarks[i].y) for i in finger_tips
+            }
 
             for i, (x, y) in current_finger_positions.items():
                 height, width, _ = frame.shape
@@ -221,7 +229,9 @@ while cap.isOpened():
                     last_cx, last_cy = int(last_x * width), int(last_y * height)
                     cv2.line(frame, (cx, cy), (last_cx, last_cy), (255, 255, 0), 2)
 
-                    if (last_finger_positions[i][1] - y) > THRESHOLD and i not in played_notes[hand_label]:
+                    if (last_finger_positions[i][1] - y) > THRESHOLD and i not in played_notes[
+                        hand_label
+                    ]:
                         note_to_play = None
 
                         if hand_label == "Left":
@@ -268,10 +278,18 @@ while cap.isOpened():
     cv2.putText(frame, title, (text_x + 2, 72), font, 1.5, (0, 0, 0), 4)
     cv2.putText(frame, title, (text_x, 70), font, 1.5, (100, 200, 255), 2)
 
-    cv2.putText(frame, "'q' zum Beenden", (width - 250, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+    cv2.putText(
+        frame,
+        "'q' zum Beenden",
+        (width - 250, 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (255, 255, 255),
+        2,
+    )
 
     cv2.imshow("Handpiano", frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
 cap.release()

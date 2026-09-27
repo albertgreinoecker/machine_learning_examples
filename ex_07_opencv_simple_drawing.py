@@ -2,9 +2,9 @@ import cv2
 import numpy as np
 
 # Erstelle ein leeres weißes Bild
-#image = np.ones((500, 500, 3), dtype=np.uint8) * 255
+# image = np.ones((500, 500, 3), dtype=np.uint8) * 255
 
-#lade ein Bild
+# lade ein Bild
 image = cv2.imread("data/htl.jpg")
 # Neue Größe setzen (Breite, Höhe)
 new_size = (500, 500)
@@ -29,7 +29,7 @@ cv2.polylines(image, [pts], isClosed=True, color=(200, 0, 200), thickness=2)
 
 # Zeichne ein Bild darauf
 # Overlay-Bild laden (z. B. PNG mit transparentem Bereich)
-overlay = cv2.imread('data/player.png', cv2.IMREAD_UNCHANGED)
+overlay = cv2.imread("data/player.png", cv2.IMREAD_UNCHANGED)
 
 
 ####falls ein Alpha-Kanal vorhanden ist, wird dieser gelöscht
@@ -47,10 +47,10 @@ x, y = 400, 400
 h, w, _ = overlay.shape
 
 # Überlagern ohne Transparenz (direkt kopieren)
-image[y:y+h, x:x+w] = overlay
+image[y : y + h, x : x + w] = overlay
 
 
 # Zeige das Bild
-cv2.imshow('Zeichnung', image)
+cv2.imshow("Zeichnung", image)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

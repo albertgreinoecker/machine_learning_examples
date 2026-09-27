@@ -1,6 +1,6 @@
+import numpy as np
 from keras.models import load_model  # TensorFlow is required for Keras to work
 from PIL import Image, ImageOps  # Install pillow instead of PIL
-import numpy as np
 
 # Disable scientific notation for clarity
 np.set_printoptions(suppress=True)
@@ -19,7 +19,7 @@ class_names = open("%slabels.txt" % base_dir, "r").readlines()
 data = np.ndarray(shape=(1, 224, 224, 3), dtype=np.float32)
 
 # Replace this with the path to your image
-#image = Image.open("%soffen.jpg" % base_dir).convert("RGB")
+# image = Image.open("%soffen.jpg" % base_dir).convert("RGB")
 image = Image.open("%sgeschlossen.jpg" % base_dir).convert("RGB")
 
 # resizing the image to be at least 224x224 and then cropping from the center
@@ -44,4 +44,3 @@ confidence_score = prediction[0][index]
 # Print prediction and confidence score
 print("Class:", class_name[2:], end="")
 print("Confidence Score:", confidence_score)
-

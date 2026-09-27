@@ -1,9 +1,10 @@
 import os
-import urllib.request
-import cv2
-import mediapipe as mp
 import random
 import time
+import urllib.request
+
+import cv2
+import mediapipe as mp
 import numpy as np
 
 # Download the hand landmark model once (if not present yet)
@@ -15,10 +16,13 @@ if not os.path.exists(MODEL_PATH):
 
 # Setup für Hand-Tracking und Video
 vision = mp.tasks.vision
-hand_tracking = vision.HandLandmarker.create_from_options(vision.HandLandmarkerOptions(
-    base_options=mp.tasks.BaseOptions(model_asset_path=MODEL_PATH),
-    running_mode=vision.RunningMode.VIDEO,
-    num_hands=2))
+hand_tracking = vision.HandLandmarker.create_from_options(
+    vision.HandLandmarkerOptions(
+        base_options=mp.tasks.BaseOptions(model_asset_path=MODEL_PATH),
+        running_mode=vision.RunningMode.VIDEO,
+        num_hands=2,
+    )
+)
 video_capture = cv2.VideoCapture(0)
 
 # Variablen
@@ -33,7 +37,7 @@ def laserschwerter_zeichnen(bild, hand_landmarks, hand_seite):
     if hand_landmarks:
         for hand_landmark, hand_handedness in zip(hand_landmarks, hand_seite):
             # Farbe je nach Handseite
-            farbe = (0, 0, 255) if hand_handedness[0].category_name == 'Right' else (255, 0, 0)
+            farbe = (0, 0, 255) if hand_handedness[0].category_name == "Right" else (255, 0, 0)
 
             # Koordinaten für Handgelenk und Zeigefinger
             handgelenk_x = int(hand_landmark[0].x * bild.shape[1])
@@ -42,7 +46,9 @@ def laserschwerter_zeichnen(bild, hand_landmarks, hand_seite):
             zeigefinger_y = int(hand_landmark[5].y * bild.shape[0])
 
             # Laserschwert Griff
-            cv2.line(bild, (handgelenk_x, handgelenk_y), (zeigefinger_x, zeigefinger_y), (0, 0, 0), 10)
+            cv2.line(
+                bild, (handgelenk_x, handgelenk_y), (zeigefinger_x, zeigefinger_y), (0, 0, 0), 10
+            )
 
             # Laserstrahl berechnen und verlängern
             richtung_x = zeigefinger_x - handgelenk_x
@@ -51,9 +57,19 @@ def laserschwerter_zeichnen(bild, hand_landmarks, hand_seite):
             erweiterter_y = zeigefinger_y + 2 * richtung_y
 
             # Farbiger Laserstrahl
-            cv2.line(bild, (zeigefinger_x, zeigefinger_y), (erweiterter_x, erweiterter_y), farbe, 10)
+            cv2.line(
+                bild, (zeigefinger_x, zeigefinger_y), (erweiterter_x, erweiterter_y), farbe, 10
+            )
 
-            yield (handgelenk_x, handgelenk_y, zeigefinger_x, zeigefinger_y, erweiterter_x, erweiterter_y, farbe)
+            yield (
+                handgelenk_x,
+                handgelenk_y,
+                zeigefinger_x,
+                zeigefinger_y,
+                erweiterter_x,
+                erweiterter_y,
+                farbe,
+            )
 
 
 def punkte_zeichnen(bild, spielpunkte, hand_landmarks, hand_seite, geschwindigkeits_multiplikator):
@@ -67,42 +83,52 @@ def punkte_zeichnen(bild, spielpunkte, hand_landmarks, hand_seite, geschwindigke
         mittel_y = hoehe // 2
 
         # Bewegung berechnen
-        dx = (mittel_x - punkt['x']) * 0.1
-        dy = (mittel_y - punkt['y']) * 0.1
+        dx = (mittel_x - punkt["x"]) * 0.1
+        dy = (mittel_y - punkt["y"]) * 0.1
 
         basis_bewegung = 0.005 * geschwindigkeits_multiplikator
-        y_abhaengige_bewegung = (punkt['y'] / hoehe) * 0.02 * geschwindigkeits_multiplikator
+        y_abhaengige_bewegung = (punkt["y"] / hoehe) * 0.02 * geschwindigkeits_multiplikator
 
-        punkt['x'] += dx * basis_bewegung * 3  # Horizontale Bewegung
-        punkt['y'] += dy * basis_bewegung + (0.5 * geschwindigkeits_multiplikator) + 0.75  # Vertikale Bewegung
+        punkt["x"] += dx * basis_bewegung * 3  # Horizontale Bewegung
+        punkt["y"] += (
+            dy * basis_bewegung + (0.5 * geschwindigkeits_multiplikator) + 0.75
+        )  # Vertikale Bewegung
 
-        punkt['size'] += 0.4 * geschwindigkeits_multiplikator  # Ball wird größer
+        punkt["size"] += 0.4 * geschwindigkeits_multiplikator  # Ball wird größer
 
         # Punkt zeichnen mit Glanz-Effekt
-        cv2.circle(bild, (int(punkt['x']), int(punkt['y'])), int(punkt['size']), (0, 0, 0), -1)
-        cv2.circle(bild, (int(punkt['x']), int(punkt['y'])), int(punkt['size']) - 2, punkt['color'], -1)
+        cv2.circle(bild, (int(punkt["x"]), int(punkt["y"])), int(punkt["size"]), (0, 0, 0), -1)
+        cv2.circle(
+            bild, (int(punkt["x"]), int(punkt["y"])), int(punkt["size"]) - 2, punkt["color"], -1
+        )
 
         # Glanz-Effekt
-        glanz_x = int(punkt['x'] - punkt['size'] * 0.3)
-        glanz_y = int(punkt['y'] - punkt['size'] * 0.3)
-        glanz_groesse = max(2, int(punkt['size'] * 0.4))
+        glanz_x = int(punkt["x"] - punkt["size"] * 0.3)
+        glanz_y = int(punkt["y"] - punkt["size"] * 0.3)
+        glanz_groesse = max(2, int(punkt["size"] * 0.4))
         cv2.circle(bild, (glanz_x, glanz_y), glanz_groesse, (255, 255, 255), -1)
 
         # Punkte entfernen wenn sie aus dem Bild verschwinden
-        if punkt['y'] > hoehe or punkt['size'] > 50:
+        if punkt["y"] > hoehe or punkt["size"] > 50:
             zu_entfernende_punkte.append(punkt)
             continue
 
         # Kollisionserkennung
-        if punkt['size'] > 10:
+        if punkt["size"] > 10:
             for hand_landmark, hand_handedness in zip(hand_landmarks, hand_seite):
                 handgelenk_x = int(hand_landmark[0].x * bild.shape[1])
                 handgelenk_y = int(hand_landmark[0].y * bild.shape[0])
 
                 # Kollision mit Handgelenk
-                if (handgelenk_x - punkt['x']) ** 2 + (handgelenk_y - punkt['y']) ** 2 < punkt['size'] ** 2:
-                    if (punkt['color'] == (0, 0, 255) and hand_handedness[0].category_name == 'Right') or \
-                            (punkt['color'] == (255, 0, 0) and hand_handedness[0].category_name == 'Left'):
+                if (handgelenk_x - punkt["x"]) ** 2 + (handgelenk_y - punkt["y"]) ** 2 < punkt[
+                    "size"
+                ] ** 2:
+                    if (
+                        punkt["color"] == (0, 0, 255)
+                        and hand_handedness[0].category_name == "Right"
+                    ) or (
+                        punkt["color"] == (255, 0, 0) and hand_handedness[0].category_name == "Left"
+                    ):
                         zu_entfernende_punkte.append(punkt)
                         punktestand += 1
                         break
@@ -110,24 +136,33 @@ def punkte_zeichnen(bild, spielpunkte, hand_landmarks, hand_seite, geschwindigke
             # Kollision mit Laserschwert
             for schwert in laserschwerter_zeichnen(bild, hand_landmarks, hand_seite):
                 _, _, zeigefinger_x, zeigefinger_y, erweiterter_x, erweiterter_y, farbe = schwert
-                if punkt['color'] == farbe:
-                    linien_laenge = np.sqrt((erweiterter_x - zeigefinger_x) ** 2 + (erweiterter_y - zeigefinger_y) ** 2)
-                    t = ((punkt['x'] - zeigefinger_x) * (erweiterter_x - zeigefinger_x) +
-                         (punkt['y'] - zeigefinger_y) * (erweiterter_y - zeigefinger_y)) / (linien_laenge ** 2)
+                if punkt["color"] == farbe:
+                    linien_laenge = np.sqrt(
+                        (erweiterter_x - zeigefinger_x) ** 2 + (erweiterter_y - zeigefinger_y) ** 2
+                    )
+                    t = (
+                        (punkt["x"] - zeigefinger_x) * (erweiterter_x - zeigefinger_x)
+                        + (punkt["y"] - zeigefinger_y) * (erweiterter_y - zeigefinger_y)
+                    ) / (linien_laenge**2)
                     t = max(0, min(1, t))
 
                     naechster_x = zeigefinger_x + t * (erweiterter_x - zeigefinger_x)
                     naechster_y = zeigefinger_y + t * (erweiterter_y - zeigefinger_y)
 
-                    abstand = np.sqrt((punkt['x'] - naechster_x) ** 2 + (punkt['y'] - naechster_y) ** 2)
+                    abstand = np.sqrt(
+                        (punkt["x"] - naechster_x) ** 2 + (punkt["y"] - naechster_y) ** 2
+                    )
 
-                    if abstand < punkt['size']:
+                    if abstand < punkt["size"]:
                         zu_entfernende_punkte.append(punkt)
                         punktestand += 1
-                        cv2.line(bild,
-                                 (int(punkt['x'] - punkt['size']), int(punkt['y'] - punkt['size'])),
-                                 (int(punkt['x'] + punkt['size']), int(punkt['y'] + punkt['size'])),
-                                 (255, 255, 255), 2)
+                        cv2.line(
+                            bild,
+                            (int(punkt["x"] - punkt["size"]), int(punkt["y"] - punkt["size"])),
+                            (int(punkt["x"] + punkt["size"]), int(punkt["y"] + punkt["size"])),
+                            (255, 255, 255),
+                            2,
+                        )
                         break
 
     # Getroffene Punkte entfernen
@@ -172,10 +207,10 @@ while video_capture.isOpened():
         spawn_y_position = int(hoehe * 0.6)
 
         neuer_punkt = {
-            'x': spawn_x,
-            'y': spawn_y_position,
-            'size': 5,
-            'color': (0, 0, 255) if random.random() > 0.5 else (255, 0, 0)
+            "x": spawn_x,
+            "y": spawn_y_position,
+            "size": 5,
+            "color": (0, 0, 255) if random.random() > 0.5 else (255, 0, 0),
         }
         spielpunkte.append(neuer_punkt)
         letzte_spawn_zeit = aktuelle_zeit
@@ -183,18 +218,34 @@ while video_capture.isOpened():
     # Infoleiste unten
     infoleiste_hoehe = 50
     cv2.rectangle(bild, (0, hoehe - infoleiste_hoehe), (breite, hoehe), (0, 0, 0), -1)
-    cv2.putText(bild, f'Punkte: {punktestand}', (breite - 150, hoehe - 15),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(
+        bild,
+        f"Punkte: {punktestand}",
+        (breite - 150, hoehe - 15),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        1,
+        (255, 255, 255),
+        2,
+        cv2.LINE_AA,
+    )
 
     # Geschwindigkeit anzeigen
-    cv2.putText(bild, f'Speed: {geschwindigkeits_multiplikator:.1f}x',
-                (10, hoehe - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(
+        bild,
+        f"Speed: {geschwindigkeits_multiplikator:.1f}x",
+        (10, hoehe - 15),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        (255, 255, 255),
+        1,
+        cv2.LINE_AA,
+    )
 
     # Bild anzeigen
     cv2.imshow("Laser-Schwerter Spiel", bild)
 
     # Spiel beenden
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
 video_capture.release()

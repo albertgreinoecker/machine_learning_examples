@@ -1,7 +1,7 @@
-from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
+from transformers import BlenderbotForConditionalGeneration, BlenderbotTokenizer
 
 # Modell und Tokenizer laden
-model_name = "facebook/blenderbot-400M-distill"  #Knowledge Distillation
+model_name = "facebook/blenderbot-400M-distill"  # Knowledge Distillation
 tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
 model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
 

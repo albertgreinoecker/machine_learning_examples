@@ -1,10 +1,12 @@
-from keras.models import load_model  # TensorFlow is required for Keras to work
-from PIL import Image, ImageOps  # Install pillow instead of PIL
 import numpy as np
 import tensorflow as tf
+from keras.models import load_model  # TensorFlow is required for Keras to work
+from PIL import Image, ImageOps  # Install pillow instead of PIL
+
 print(tf.__version__)
 
 from tensorflow.keras.layers import DepthwiseConv2D as OriginalDepthwiseConv2D
+
 
 class PatchedDepthwiseConv2D(OriginalDepthwiseConv2D):
     def __init__(self, *args, **kwargs):
@@ -12,16 +14,17 @@ class PatchedDepthwiseConv2D(OriginalDepthwiseConv2D):
         super().__init__(*args, **kwargs)
 
 
-
-
-model = load_model("models/keras_model.h5", compile=False,
-                   custom_objects={'DepthwiseConv2D': PatchedDepthwiseConv2D})
+model = load_model(
+    "models/keras_model.h5",
+    compile=False,
+    custom_objects={"DepthwiseConv2D": PatchedDepthwiseConv2D},
+)
 
 # Disable scientific notation for clarity
 np.set_printoptions(suppress=True)
 
 # Load the model
-#model = load_model("models/keras_model.h5", compile=False)
+# model = load_model("models/keras_model.h5", compile=False)
 
 # Load the labels
 class_names = open("models/labels.txt", "r").readlines()

@@ -1,5 +1,5 @@
-from flair.models import TextClassifier
 from flair.data import Sentence
+from flair.models import TextClassifier
 
 # Vortrainiertes Sentiment-Modell laden
 classifier = TextClassifier.load("sentiment")

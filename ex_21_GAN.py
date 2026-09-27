@@ -1,20 +1,20 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.layers import BatchNormalization, Dense, Flatten, LeakyReLU, Reshape
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, LeakyReLU, BatchNormalization, Reshape, Flatten
-import matplotlib.pyplot as plt
 
 
 # Generator-Modell erstellen
 def build_generator():
     model = Sequential()
     model.add(Dense(128, input_dim=100))  # Eingabe-Rauschvektor (100 Dimensionen)
-    model.add(LeakyReLU(alpha=0.2)) #Verhindert "tote" Neuronen, indem Wert nicht 0 werden kann
+    model.add(LeakyReLU(alpha=0.2))  # Verhindert "tote" Neuronen, indem Wert nicht 0 werden kann
     model.add(BatchNormalization(momentum=0.8))
     model.add(Dense(256))
     model.add(LeakyReLU(alpha=0.2))
     model.add(BatchNormalization(momentum=0.8))
-    model.add(Dense(28 * 28, activation='tanh'))  # Ausgabe in Form eines 28x28 Bildes
+    model.add(Dense(28 * 28, activation="tanh"))  # Ausgabe in Form eines 28x28 Bildes
     model.add(Reshape((28, 28)))
     return model
 
@@ -27,16 +27,16 @@ def build_discriminator():
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dense(128))
     model.add(LeakyReLU(alpha=0.2))
-    model.add(Dense(1, activation='sigmoid'))  # Klassifikation: Echt oder Fake
+    model.add(Dense(1, activation="sigmoid"))  # Klassifikation: Echt oder Fake
     return model
 
 
 # GAN-Modell zusammenstellen
 def build_gan(generator, discriminator):
-    discriminator.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    discriminator.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
     discriminator.trainable = False  # Discriminator während GAN-Training einfrieren
     model = Sequential([generator, discriminator])
-    model.compile(loss='binary_crossentropy', optimizer='adam')
+    model.compile(loss="binary_crossentropy", optimizer="adam")
     return model
 
 
@@ -80,8 +80,8 @@ def plot_generated_images(generator, epoch, examples=10):
     plt.figure(figsize=(10, 2))
     for i in range(examples):
         plt.subplot(1, examples, i + 1)
-        plt.imshow(generated_images[i], cmap='gray')
-        plt.axis('off')
+        plt.imshow(generated_images[i], cmap="gray")
+        plt.axis("off")
     plt.show()
 
 

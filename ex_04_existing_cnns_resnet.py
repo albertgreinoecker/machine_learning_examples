@@ -1,17 +1,15 @@
-import tensorflow as tf
-from keras.applications import ResNet50, ResNet152
-
-from keras.preprocessing import image
-from keras.applications.resnet50 import preprocess_input, decode_predictions
-from keras.applications.efficientnet import preprocess_input, decode_predictions
-from keras.applications import EfficientNetB0
-import numpy as np
+import json
 import os
+import urllib
+
+import numpy as np
+import tensorflow as tf
+from keras.applications import EfficientNetB0, ResNet50
+from keras.applications.efficientnet import preprocess_input
 from keras.applications.resnet50 import decode_predictions
-import json, urllib
+from keras.preprocessing import image
 
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Do not use the GPU
 
 
 # Download mapping of ImageNet class indices to labels
@@ -47,8 +45,8 @@ preds = model.predict(x)
 tf.keras.backend.clear_session()
 
 # 1. Modell laden (mit ImageNet-Gewichten)
-model = EfficientNetB0(weights="imagenet", input_shape=(224,224,3))
-model = EfficientNetB0(weights='imagenet')
+model = EfficientNetB0(weights="imagenet", input_shape=(224, 224, 3))
+model = EfficientNetB0(weights="imagenet")
 model.summary()
 
 # Verwende das gleiche Bild wie oben

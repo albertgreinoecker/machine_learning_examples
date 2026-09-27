@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from minisom import MiniSom
 from sklearn.datasets import make_blobs
@@ -18,8 +17,13 @@ som.train_random(X, num_iteration=1000)
 plt.figure(figsize=(8, 8))
 for i, (x, y_label) in enumerate(zip(X, y)):
     winner = som.winner(x)  # Best Matching Unit (BMU)
-    plt.text(winner[0] + 0.5, winner[1] + 0.5, str(y_label), color=plt.cm.rainbow(y_label / 2),
-             fontdict={'weight': 'bold', 'size': 12})
+    plt.text(
+        winner[0] + 0.5,
+        winner[1] + 0.5,
+        str(y_label),
+        color=plt.cm.rainbow(y_label / 2),
+        fontdict={"weight": "bold", "size": 12},
+    )
 
 plt.xlim([0, 10])
 plt.ylim([0, 10])

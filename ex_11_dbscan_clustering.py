@@ -1,7 +1,7 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
 from sklearn.datasets import make_moons
+
 
 def dbscan_clustering():
     # Erstellen eines Beispiel-Datensatzes (Mondförmige Cluster)
@@ -18,6 +18,7 @@ def dbscan_clustering():
     plt.ylabel("Feature 2")
     plt.title("DBSCAN Clustering")
     plt.show()
+
 
 if __name__ == "__main__":
     dbscan_clustering()

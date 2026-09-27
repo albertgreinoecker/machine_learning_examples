@@ -23,8 +23,12 @@ class NeuralNetwork:
     def forward(self, inputs):
         # Vorwärtsdurchlauf
         self.input_layer = inputs
-        self.hidden_layer = sigmoid(np.dot(self.input_layer, self.weights_input_hidden) + self.bias_hidden)
-        self.output_layer = sigmoid(np.dot(self.hidden_layer, self.weights_hidden_output) + self.bias_output)
+        self.hidden_layer = sigmoid(
+            np.dot(self.input_layer, self.weights_input_hidden) + self.bias_hidden
+        )
+        self.output_layer = sigmoid(
+            np.dot(self.hidden_layer, self.weights_hidden_output) + self.bias_output
+        )
         return self.output_layer
 
     def backward(self, expected_output, learning_rate):

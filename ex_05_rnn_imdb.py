@@ -1,20 +1,19 @@
-from deepface.models.demography.Emotion import tf_version
+import tensorflow as tf
 from tensorflow.keras.datasets import imdb
-from tensorflow.keras.preprocessing import sequence
+from tensorflow.keras.layers import LSTM, Dense, Embedding
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Embedding, SimpleRNN, Dense, LSTM, GRU
-import os
-import  tensorflow as tf
+from tensorflow.keras.preprocessing import sequence
+
 tf.config.optimizer.set_jit(False)
 
-#os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
 
 # --- 1. IMDB-Daten laden ---
 # Wir nehmen die 10.000 häufigsten Wörter
 max_features = 10000
 
 # Wir betrachten nur die ersten 200 Wörter pro Review
-#beim Training eines RNN müssen alle Eingabesequenzen gleich lang sein
+# beim Training eines RNN müssen alle Eingabesequenzen gleich lang sein
 maxlen = 200
 
 print("Lade Daten ...")
@@ -29,19 +28,19 @@ X_train[0]
 for key, value in word_index.items():
     print(key, value)
 
-#Möchte man die speziellen Tokens sehen und nicht nur die Indizes,
+# Möchte man die speziellen Tokens sehen und nicht nur die Indizes,
 # dann muss man das Mapping invertieren: index → wort
 reverse_word_index = {value + 3: key for key, value in word_index.items()}
 reverse_word_index[0] = "<PAD>"
 reverse_word_index[1] = "<START>"
-reverse_word_index[2] = "<UNK>"   # unbekanntes Wort
+reverse_word_index[2] = "<UNK>"  # unbekanntes Wort
 reverse_word_index[3] = "<UNUSED>"
 
 # Dann kann man die Reviews wieder in Text zurückwandeln
-decoded_review = ' '.join([reverse_word_index.get(i, '?') for i in X_train[0]])
+decoded_review = " ".join([reverse_word_index.get(i, "?") for i in X_train[0]])
 print("Beispiel-Review (entschlüsselt):", decoded_review)
 
-#Alle Zahlen zwischen den beiden Polen: 0 negativ, 1 positiv
+# Alle Zahlen zwischen den beiden Polen: 0 negativ, 1 positiv
 print(y_train[0])
 
 print(len(X_train), "Trainingsbeispiele")
@@ -56,33 +55,32 @@ X_test = sequence.pad_sequences(X_test, maxlen=maxlen)
 
 # --- 3. Modell erstellen ---
 
-#Möchte man mehr kombinieren, dann muss man return_sequences=True setzen, z.B.:
-#SimpleRNN(32, return_sequences=True),  # gibt Sequenz aus
+# Möchte man mehr kombinieren, dann muss man return_sequences=True setzen, z.B.:
+# SimpleRNN(32, return_sequences=True),  # gibt Sequenz aus
 # SimpleRNN(32),                         # verarbeitet Sequenz weiter
 
-model = Sequential([
-    # Wandelt Wortindizes in Vektoren, Embeddings nicht aus einer externen Quelle bezogen,
-    # sondern vom Modell selbst während des Trainings gelernt.
-    Embedding(max_features, output_dim=32, input_length=maxlen),
-    #SimpleRNN(32),                                     # Einfaches RNN mit 32 Einheiten (Neuronen). Jede Zelle hat ihr eigenes Gedächtnis.
-    LSTM(64),
-    # GRU(64),                                          # GRU-Schicht mit 64 Einheiten
-    Dense(1, activation='sigmoid')                     # Binäre Sentiment-Ausgabe (positiv/negativ)
-])
+model = Sequential(
+    [
+        # Wandelt Wortindizes in Vektoren, Embeddings nicht aus einer externen Quelle bezogen,
+        # sondern vom Modell selbst während des Trainings gelernt.
+        Embedding(max_features, output_dim=32, input_length=maxlen),
+        # SimpleRNN(32),                                     # Einfaches RNN mit 32 Einheiten (Neuronen). Jede Zelle hat ihr eigenes Gedächtnis.
+        LSTM(64),
+        # GRU(64),                                          # GRU-Schicht mit 64 Einheiten
+        Dense(1, activation="sigmoid"),  # Binäre Sentiment-Ausgabe (positiv/negativ)
+    ]
+)
 
-#Der Rest ist wie gehabt:
+# Der Rest ist wie gehabt:
 
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
 
 # --- 4. Modell trainieren ---
 print("Trainiere Modell ...")
-history = model.fit(X_train, y_train,
-                    epochs=3,
-                    batch_size=64,
-                    validation_split=0.2)
+history = model.fit(X_train, y_train, epochs=3, batch_size=64, validation_split=0.2)
 
 
-#Möchte man sich die Embeddings anschauen:
+# Möchte man sich die Embeddings anschauen:
 embedding_layer = model.layers[0]
 
 
@@ -92,6 +90,7 @@ print(f"\nTestgenauigkeit: {acc:.2f}")
 
 
 # --- 6. Vorhersagen machen ---
+
 
 def encode_review(text):
     words = text.lower().split()
@@ -109,7 +108,7 @@ model.save("models/ex_5_imdb.model.h5")  # oder "sentiment_model.keras"
 
 ######################################################
 
-#model = load_model("models/ex_5_imdb.model.h5")
+# model = load_model("models/ex_5_imdb.model.h5")
 
 my_review = (
     "I really loved this movie. The story was engaging and the characters felt real. "
@@ -135,4 +134,3 @@ encoded_review = encode_review(my_review)
 padded = sequence.pad_sequences([encoded_review], maxlen=maxlen)
 pred = model.predict(padded)
 print(pred)
-

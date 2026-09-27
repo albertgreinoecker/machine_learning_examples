@@ -1,6 +1,7 @@
 import base64
-import os
 import json
+import os
+
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -14,8 +15,8 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 response = client.responses.create(
     model="gpt-4.1-mini",
     input="Gib alle österreichischen Bundesländer als JSON-Liste aus. "
-          "Jedes Objekt soll die Felder 'name' und 'capital' enthalten. "
-          "Antworte ausschließlich mit gültigem JSON dass man gleich weiterverarbeiten kann, nicht für die Darstellung, also kein Markdown."
+    "Jedes Objekt soll die Felder 'name' und 'capital' enthalten. "
+    "Antworte ausschließlich mit gültigem JSON dass man gleich weiterverarbeiten kann, nicht für die Darstellung, also kein Markdown.",
 )
 
 # Text extrahieren
@@ -37,11 +38,7 @@ for b in bundeslaender:
 
 prompt = "Zeige mir ein Bild von einem Programmierer  im Stil von Leonardo da Vinci, der an einem Computer arbeitet, umgeben von alten Büchern und Papieren, mit einem Hauch von Renaissance-Ästhetik."
 
-result = client.images.generate(
-    model="gpt-image-1",
-    prompt=prompt,
-    size="1024x1024"
-)
+result = client.images.generate(model="gpt-image-1", prompt=prompt, size="1024x1024")
 
 # Base64 dekodieren
 image_base64 = result.data[0].b64_json
@@ -67,15 +64,9 @@ Antworte ausschließlich mit Code, nicht für die Darstellung, also kein Markdow
 response = client.responses.create(
     model="gpt-4.1-mini",
     input=[
-        {
-            "role": "system",
-            "content": "Du bist ein professioneller Softwareentwickler."
-        },
-        {
-            "role": "user",
-            "content": prompt
-        }
-    ]
+        {"role": "system", "content": "Du bist ein professioneller Softwareentwickler."},
+        {"role": "user", "content": prompt},
+    ],
 )
 
 # Generierten Code ausgeben

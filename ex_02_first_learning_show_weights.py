@@ -1,6 +1,6 @@
 import h5py
 import matplotlib.pyplot as plt
-import numpy as np
+
 
 def print_h5_structure(g, indent=0):
     """Rekursiv alle Gruppen und Datasets auflisten"""
@@ -18,15 +18,14 @@ def print_h5_structure(g, indent=0):
 def get_weights(f, idx):
 
     return f["layers"]["dense"]["vars"][idx][()]
-    #bias = f["dense"]["dense"]["bias:0"][()]
+    # bias = f["dense"]["dense"]["bias:0"][()]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Datei öffnen
     f = h5py.File("out/ex_02.weights.h5", "r")
     print_h5_structure(f)
     w0 = get_weights(f, "0")
-
 
     for neuron_idx in range(w0.shape[1]):
         weights_img = w0[:, neuron_idx].reshape(28, 28)
@@ -36,7 +35,5 @@ if __name__ == '__main__':
         plt.title(f"Neuron {neuron_idx} - Gewichtsmuster")
         plt.savefig(f"out/weights/ex_02.neuron{neuron_idx}.weights.png")
         plt.close()
-
-
 
     w1 = get_weights(f, "1")

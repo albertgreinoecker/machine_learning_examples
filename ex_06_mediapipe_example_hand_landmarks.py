@@ -21,7 +21,8 @@ options = vision.HandLandmarkerOptions(
     running_mode=vision.RunningMode.VIDEO,
     num_hands=2,
     min_hand_detection_confidence=0.5,
-    min_tracking_confidence=0.5)
+    min_tracking_confidence=0.5,
+)
 
 # Initialize webcam
 cap = cv2.VideoCapture(0)
@@ -53,10 +54,10 @@ with vision.HandLandmarker.create_from_options(options) as hands:
 
             # Print landmarks for each hand detected
             for id, landmark in enumerate(hand_landmarks):
-                print(f'Landmark {id}: x={landmark.x:.2f}, y={landmark.y:.2f}, z={landmark.z:.2f}')
+                print(f"Landmark {id}: x={landmark.x:.2f}, y={landmark.y:.2f}, z={landmark.z:.2f}")
 
         # Display the resulting frame
-        cv2.imshow('MediaPipe Hands', image)
+        cv2.imshow("MediaPipe Hands", image)
         if cv2.waitKey(5) & 0xFF == 27:  # Press 'ESC' to exit
             break
 

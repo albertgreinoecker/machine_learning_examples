@@ -1,14 +1,15 @@
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.corpus import stopwords
-from nltk import pos_tag, SnowballStemmer
 import string
 
-# Falls notwendig, lade die benötigten Ressourcen herunter
-#nltk.download('punkt')
-#nltk.download('averaged_perceptron_tagger_de') #Part-of-Speech-Tagger
-#nltk.download('stopwords')
+from nltk import SnowballStemmer, pos_tag
+from nltk.corpus import stopwords
+from nltk.tokenize import sent_tokenize, word_tokenize
 
-#nltk.download() # Öffnet einen Download-Dialog
+# Falls notwendig, lade die benötigten Ressourcen herunter
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger_de') #Part-of-Speech-Tagger
+# nltk.download('stopwords')
+
+# nltk.download() # Öffnet einen Download-Dialog
 
 # Beispieltext
 text = "Was gibt es besseres als Sprachverarbeitung mit NLTK zu machen."
@@ -22,7 +23,7 @@ words = word_tokenize(text)
 print("Wörter:", words)
 
 # Stemming (Reduktion auf Wortstamm)
-stemmer = SnowballStemmer('german') # PorterStemmer()
+stemmer = SnowballStemmer("german")  # PorterStemmer()
 stems = [stemmer.stem(word) for word in words]
 print("Stemming:", stems)
 

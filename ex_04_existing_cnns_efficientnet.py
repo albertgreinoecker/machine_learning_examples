@@ -1,16 +1,14 @@
-import tensorflow as tf
-from keras.applications import ResNet50, ResNet152
-
-from keras.preprocessing import image
-from keras.applications.resnet50 import preprocess_input, decode_predictions
-from keras.applications.efficientnet import preprocess_input, decode_predictions
-from keras.applications import EfficientNetB0
-import numpy as np
+import json
 import os
-from keras.applications.resnet50 import decode_predictions
-import json, urllib
+import urllib
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1" #Do not use the GPU
+import numpy as np
+from keras.applications import EfficientNetB0
+from keras.applications.efficientnet import preprocess_input
+from keras.applications.resnet50 import decode_predictions
+from keras.preprocessing import image
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Do not use the GPU
 
 
 # Download mapping of ImageNet class indices to labels
@@ -22,7 +20,7 @@ for k in range(1000):
     print(k, class_index[str(k)])
 
 
-model = EfficientNetB0(weights='imagenet')
+model = EfficientNetB0(weights="imagenet")
 model.summary()
 
 
@@ -34,11 +32,8 @@ x = np.expand_dims(x, axis=0)
 x = preprocess_input(x)
 
 
-
-
 # Verwende das gleiche Bild wie oben
 # 3. Vorhersage
 preds = model.predict(x)
 print("Top-5 Predictions:")
 print(decode_predictions(preds, top=5)[0])
-
