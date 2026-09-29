@@ -1,0 +1,42 @@
+numpy
+matplotlib
+keras
+tensorflow[and-cuda]
+Pillow
+pandas
+transformers
+mediapipe
+opencv-python
+gymnasium
+nltk
+gensim
+tensorboard
+tiktoken
+spacy
+minisom
+IPython
+flair
+chromadb
+ultralytics
+deepface
+tf-keras #needed by deepface
+sentence_transformers
+pdf2image
+pytesseract
+diffusers
+torch
+torchaudio
+ollama
+librosa
+pygame
+kagglehub
+openai
+python-dotenv
+scikit-learn
+scipy
+requests
+sounddevice
+# spaCy models (install after the packages above):
+#   python -m spacy download de_core_news_sm
+#   python -m spacy download de_core_news_md
+#   python -m spacy download de_core_news_lg
