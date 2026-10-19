@@ -31,6 +31,9 @@ y_test: labels for testing the model
 """
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
+x_train0 = x_train[0]
+
+
 """
 #download the images
 """
@@ -83,12 +86,13 @@ x_train = x_train.reshape(60000, 784)
 x_test = x_test.reshape(10000, 784)
 x_train = x_train.astype("float32")
 x_test = x_test.astype("float32")
-
+print(x_train[1])
 print(x_train[1][400:600])
 
 model = keras.Sequential(
     [
         keras.Input(shape=(784,)),
+        layers.Dense(24, activation="relu"),
         layers.Dense(16, activation="relu"),
         layers.Dense(num_classes, activation="softmax"),
     ]
@@ -101,7 +105,7 @@ model.summary()
 """
 
 batch_size = 128
-epochs = 3
+epochs = 17
 
 model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
 
@@ -119,23 +123,28 @@ print("Test loss:", score[0])
 print("Test accuracy:", score[1])
 
 """
-## Do some Preodictions on the test dataset and compare the results
+## Do some Predictions on the test dataset and compare the results
 """
 
 pred = model.predict(x_test)
 
+print(y_test[:20])
 pred1 = pred[1]
 print(pred[1])  # Prediction for image 1
 pred_1 = np.argmax(pred[1])
 print(pred_1)
 np.argmax(y_test[1])
 
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
 for i in range(0, 1000):
     pred_i = np.argmax(pred[i])  # get the position of the highest value within the list
-    real = np.argmax(y_test[i])
+    real = y_test[i]
     if real != pred_i:
         print(real, pred_i)
-
+        plt.imshow(x_test[i])
+        #plt.show()
+        plt.savefig(path + str(real) + "_" + str(pred_i) +  " .png")
 
 """
 How to load and save the model

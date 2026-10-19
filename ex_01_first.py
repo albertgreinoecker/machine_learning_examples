@@ -34,7 +34,7 @@ from PIL import Image
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
 # Target directory for the exported JPEG files
-OUTPUT_DIR = "/home/albert/tmp/mnist"
+OUTPUT_DIR = "/home/albert/tmp/fashion_mnist"
 
 # Get to know the dataset
 print("trainingsdaten:")

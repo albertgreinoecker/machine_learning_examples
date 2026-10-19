@@ -1,7 +1,7 @@
 numpy
 matplotlib
 keras
-tensorflow[and-cuda]
+tensorflow
 Pillow
 pandas
 transformers
